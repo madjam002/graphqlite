@@ -65,8 +65,7 @@ call = ws type:string ws "(" param:value ")" {
   return { type: type, param: param };
 }
 
-definition "definition"
-  = calls:(
+startDefinition = calls:(
       first: call
       rest:(callSeparator c:call { return c; })*
       {
@@ -79,6 +78,10 @@ definition "definition"
         return result;
       }
     )
+  / { return []; }
+
+definition "definition"
+  = calls:startDefinition
     members:object {
       return { calls: calls, fields: members }
     }

@@ -25,6 +25,11 @@ describe('parser', function () {
         id,
         title
       }
+
+      {
+        foo,
+        bar
+      }
     `)
 
     expect(output).toEqual([
@@ -59,6 +64,13 @@ describe('parser', function () {
         fields: {
           id: true,
           title: true
+        }
+      },
+      {
+        calls: [],
+        fields: {
+          foo: true,
+          bar: true
         }
       }
     ])
