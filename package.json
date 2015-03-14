@@ -4,7 +4,12 @@
   "description": "An experimental implementation of Facebook's GraphQL",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
+    "testFileExtensions": ["es6", "js"],
+    "moduleFileExtensions": ["js", "json", "es6"]
   },
   "keywords": [
     "graphql",
@@ -14,5 +19,9 @@
   "license": "MIT",
   "dependencies": {
     "pegjs": "^0.8.0"
+  },
+  "devDependencies": {
+    "babel-jest": "^4.0.0",
+    "jest-cli": "^0.4.0"
   }
 }

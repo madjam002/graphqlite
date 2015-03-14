@@ -16,8 +16,14 @@ callSeparator = ws "." ws
 value = false
   / true
   / null
+  / integer
   / string
+  / undefined
 
+stringOrUndf = string
+  / undefined
+
+undefined = "" { return undefined; }
 false = "false" { return false; }
 null  = "null"  { return null;  }
 true  = "true"  { return true;  }
@@ -31,11 +37,11 @@ object
       {
         var result = {}, i;
 
-        if (first.name !== '')
+        if (first.name !== undefined)
           result[first.name] = first.value || true;
 
         for (i = 0; i < rest.length; i++) {
-          if (rest[i].name !== '')
+          if (rest[i].name !== undefined)
             result[rest[i].name] = rest[i].value || true;
         }
 
@@ -49,7 +55,7 @@ member
   = name:string ws value:childDefinition {
       return { name: name, value: value };
     }
-  / name:string {
+  / name:stringOrUndf {
       return { name: name };
     }
 
@@ -85,9 +91,13 @@ childDefinition "definition"
     return { calls: [], fields: def };
   }
 
-// Strings
+// Strings and integers
 
 string "string"
-  = chars:char* { return chars.join(""); }
+  = chars:char+ { return chars.join(""); }
+
+integer "integer"
+  = integers:integers+ { return parseInt(integers.join("")); }
 
 char = [0-9a-zA-Z]
+integers = [0-9]
