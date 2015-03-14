@@ -32,7 +32,7 @@ describe('parser', function () {
       }
     `)
 
-    expect(output).toEqual([
+    expected = [
       {
         calls: [{ type: 'node', param: 'abc123' }],
         fields: {
@@ -73,6 +73,13 @@ describe('parser', function () {
           bar: true
         }
       }
-    ])
+    ]
+
+    expect(output).toEqual(expected)
+
+    var queryString = graphqlite.stringify(expected)
+    var output2 = graphqlite.parse(queryString)
+
+    expect(output2).toEqual(expected)
   })
 })
