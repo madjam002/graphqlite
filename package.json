@@ -15,11 +15,13 @@
     "graphql",
     "react"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/madjam002/graphqlite.git"
+  },
   "author": "Jamie Greeff <madjam002@googlemail.com>",
   "license": "MIT",
-  "dependencies": {
-    "pegjs": "^0.8.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-jest": "^4.0.0",
     "jest-cli": "^0.4.0"
