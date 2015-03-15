@@ -2,6 +2,10 @@
 GraphQL Grammar
 */
 
+{
+  var deepExtend = require('deep-extend')
+}
+
 GraphQL
   = ws value:definition* ws { return value; }
 
@@ -16,7 +20,6 @@ callSeparator = ws "." ws
 value = false
   / true
   / null
-  / integer
   / string
   / undefined
 
@@ -35,14 +38,20 @@ object
       first:member
       rest:(valueSeparator m:member { return m; })*
       {
-        var result = {}, i;
+        var result = {}, i, newData;
 
-        if (first.name !== undefined)
-          result[first.name] = first.value || true;
+        if (first.name !== undefined) {
+          newData = {};
+          newData[first.name] = first.value || true;
+          deepExtend(result, newData);
+        }
 
         for (i = 0; i < rest.length; i++) {
-          if (rest[i].name !== undefined)
-            result[rest[i].name] = rest[i].value || true;
+          if (rest[i].name !== undefined) {
+            newData = {};
+            newData[rest[i].name] = rest[i].value || true;
+            deepExtend(result, newData);
+          }
         }
 
         return result;
@@ -94,13 +103,14 @@ childDefinition "definition"
     return { calls: [], fields: def };
   }
 
-// Strings and integers
+// Strings
 
 string "string"
-  = chars:char+ { return chars.join(""); }
-
-integer "integer"
-  = integers:integers+ { return parseInt(integers.join("")); }
+  = chars:char+ {
+  var str = chars.join("");
+  var num = parseInt(str);
+  if (!isNaN(num) && num.toString() === str) return num;
+  else return str;
+}
 
 char = [0-9a-zA-Z]
-integers = [0-9]

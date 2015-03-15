@@ -13,6 +13,13 @@ describe('parser', function () {
           month,
           day,
         },
+        birthdate {
+          day,
+          year
+        },
+        birthdate {
+          month
+        },
         friends.first(1) {
           cursor,
           node {
@@ -42,7 +49,8 @@ describe('parser', function () {
             calls: [],
             fields: {
               month: true,
-              day: true
+              day: true,
+              year: true
             }
           },
           friends: {
