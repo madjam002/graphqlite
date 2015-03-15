@@ -32,6 +32,8 @@ var output = graphqlite.parse(`
     }
   }
 `)
+
+var backToString = graphqlite.stringify(output)
 ```
 
 In the above example, `output` will be:
@@ -67,14 +69,12 @@ In the above example, `output` will be:
 ]
 ```
 
+`stringify` takes the output from `parse` and generates a minified GraphQL string.
+
 ## Roadmap
 Facebook will be releasing a GraphQL module in the future, but I didn't know what to expect from this
 so I created this basic one as an experiment.
 Therefore this module could become obselete in the future.
-
-I do plan on adding some additional features though:
-- GraphQL generation from object
-- Other ideas welcome
 
 ## License
 
