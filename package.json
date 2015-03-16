@@ -1,6 +1,6 @@
 {
   "name": "graphqlite",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An experimental implementation of Facebook's GraphQL",
   "main": "index.js",
   "scripts": {
