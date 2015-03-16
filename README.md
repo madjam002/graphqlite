@@ -34,6 +34,7 @@ var output = graphqlite.parse(`
 `)
 
 var backToString = graphqlite.stringify(output)
+var pretty = graphqlite.stringify(output, true)
 ```
 
 In the above example, `output` will be:
@@ -69,7 +70,7 @@ In the above example, `output` will be:
 ]
 ```
 
-`stringify` takes the output from `parse` and generates a minified GraphQL string.
+`stringify` takes the output from `parse` and generates a GraphQL string. If no second parameter is provided, the output will be minified. If the second parameter is `true`, the output will be prettified.
 
 ## Roadmap
 Facebook will be releasing a GraphQL module in the future, but I didn't know what to expect from this

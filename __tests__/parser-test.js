@@ -6,7 +6,7 @@ describe('parser', function () {
     var output
 
     output = graphqlite.parse(`
-      node(abc123) {
+      node(abc123).test() {
         id,
         name,
         birthdate {
@@ -41,7 +41,7 @@ describe('parser', function () {
 
     expected = [
       {
-        calls: [{ type: 'node', param: 'abc123' }],
+        calls: [{ type: 'node', param: 'abc123' }, { type: 'test' }],
         fields: {
           id: true,
           name: true,
@@ -86,8 +86,11 @@ describe('parser', function () {
     expect(output).toEqual(expected)
 
     var queryString = graphqlite.stringify(expected)
+    var queryStringPretty = graphqlite.stringify(expected, true)
     var output2 = graphqlite.parse(queryString)
+    var output3 = graphqlite.parse(queryStringPretty)
 
     expect(output2).toEqual(expected)
+    expect(output3).toEqual(expected)
   })
 })

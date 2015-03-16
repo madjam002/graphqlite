@@ -5,6 +5,6 @@ exports.parse = function (ql) {
   return parser.parse(ql)
 }
 
-exports.stringify = function (data) {
-  return stringify(data);
+exports.stringify = function (data, pretty) {
+  return stringify(data, pretty)
 }
