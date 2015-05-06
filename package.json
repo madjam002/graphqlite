@@ -1,6 +1,6 @@
 {
   "name": "graphqlite",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "An experimental implementation of Facebook's GraphQL",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
     "type": "git",
     "url": "git://github.com/madjam002/graphqlite.git"
   },
-  "author": "Jamie Greeff <madjam002@googlemail.com>",
+  "author": "Jamie Greeff <jamiegreeff+git@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "deep-extend": "^0.3.2"

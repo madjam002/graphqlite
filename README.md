@@ -1,4 +1,4 @@
-GraphQLite
+GraphQLite  [![NPM](https://img.shields.io/npm/v/graphqlite.svg?style=flat)](https://npmjs.org/package/graphqlite) ![Downloads](https://img.shields.io/npm/dm/graphqlite.svg?style=flat)
 =======
 
 GraphQLite is a Javascript Parser for Facebook's GraphQL.
