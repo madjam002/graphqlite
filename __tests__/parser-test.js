@@ -6,82 +6,101 @@ describe('parser', function () {
     var output
 
     output = graphqlite.parse(`
-      node(abc123).test() {
+      user(id: abc123) {
         id,
         name,
         birthdate {
-          month,
-          day,
+          month, day
         },
         birthdate {
           day,
-          year
+          year,
         },
-        birthdate {
-          month
-        },
-        friends.first(1) {
-          cursor,
-          node {
-            name
+        friends(first: 50, after: 100) {
+          edges {
+            node {
+              name,
+              id,
+            }
           }
+        },
+        profilePicture() {
+          id,
         }
       }
 
-      list() {
-        id,
-        title
-      }
-
-      {
-        foo,
-        bar
+      Viewer {
+        something(first: 62) {
+          edges {
+            node {
+              id
+            }
+          }
+        }
       }
     `)
 
-    expected = [
-      {
-        calls: [{ type: 'node', param: 'abc123' }, { type: 'test' }],
-        fields: {
-          id: true,
-          name: true,
-          birthdate: {
-            calls: [],
-            fields: {
-              month: true,
-              day: true,
-              year: true
-            }
+    expected = [{
+      "type": "user",
+      "params": {
+        "id": "abc123"
+      },
+      "fields": {
+        "id": true,
+        "name": true,
+        "birthdate": {
+          "fields": {
+            "day": true,
+            "month": true,
+            "year": true
+          }
+        },
+        "friends": {
+          "params": {
+            "first": 50,
+            "after": 100
           },
-          friends: {
-            calls: [ { type: 'first', param: 1 }],
-            fields: {
-              cursor: true,
-              node: {
-                calls: [],
-                fields: {
-                  name: true
+          "fields": {
+            "edges": {
+              "fields": {
+                "node": {
+                  "fields": {
+                    "name": true,
+                    "id": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "profilePicture": {
+          "params": {},
+          "fields": {
+            "id": true
+          }
+        }
+      }
+    }, {
+      "type": "Viewer",
+      "fields": {
+        "something": {
+          "params": {
+            "first": 62
+          },
+          "fields": {
+            "edges": {
+              "fields": {
+                "node": {
+                  "fields": {
+                    "id": true
+                  }
                 }
               }
             }
           }
         }
-      },
-      {
-        calls: [{ type: 'list' }],
-        fields: {
-          id: true,
-          title: true
-        }
-      },
-      {
-        calls: [],
-        fields: {
-          foo: true,
-          bar: true
-        }
       }
-    ]
+    }]
 
     expect(output).toEqual(expected)
 
