@@ -1,7 +1,9 @@
 GraphQLite
 =======
 
-GraphQLite is an experimental implementation of Facebook's GraphQL.
+GraphQLite is a Javascript Parser for Facebook's GraphQL.
+
+(see http://facebook.github.io/react/blog/2015/05/01/graphql-introduction.html)
 
 ## Installation
 
@@ -11,23 +13,25 @@ $ npm install graphqlite
 
 ## Usage
 
-GraphQLite exposes a simple API for parsing GraphQL (uses ES6 multi-line strings).
+GraphQLite exposes a simple API for parsing GraphQL (example uses ES6 multi-line strings).
 
 ```javascript
 var graphqlite = require('graphqlite')
 
 var output = graphqlite.parse(`
-  node(123) {
+  node(id: 123) {
     id,
     name,
     birthdate {
       month,
       day,
     },
-    friends.first(1) {
+    friends(first: 1) {
       cursor,
-      node {
-        name
+      edges {
+        node {
+          name
+        }
       }
     }
   }
@@ -40,34 +44,39 @@ var pretty = graphqlite.stringify(output, true)
 In the above example, `output` will be:
 
 ```javascript
-[
-  {
-    calls: [{ type: 'node', param: 123 }],
-    fields: {
-      id: true,
-      name: true,
-      birthdate: {
-        calls: [],
-        fields: {
-          month: true,
-          day: true
-        }
+[{
+  "type": "node",
+  "params": {
+    "id": 123
+  },
+  "fields": {
+    "id": true,
+    "name": true,
+    "birthdate": {
+      "fields": {
+        "month": true,
+        "day": true
+      }
+    },
+    "friends": {
+      "params": {
+        "first": 1
       },
-      friends: {
-        calls: [ { type: 'first', param: 1 }],
-        fields: {
-          cursor: true,
-          node: {
-            calls: [],
-            fields: {
-              name: true
+      "fields": {
+        "cursor": true,
+        "edges": {
+          "fields": {
+            "node": {
+              "fields": {
+                "name": true
+              }
             }
           }
         }
       }
     }
   }
-]
+}]
 ```
 
 `stringify` takes the output from `parse` and generates a GraphQL string. If no second parameter is provided, the output will be minified. If the second parameter is `true`, the output will be prettified.
