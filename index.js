@@ -8,3 +8,5 @@ exports.parse = function (ql) {
 exports.stringify = function (data, pretty) {
   return stringify(data, pretty)
 }
+
+exports.injectParams = require('./lib/inject-params')

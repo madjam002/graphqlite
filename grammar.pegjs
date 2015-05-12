@@ -2,6 +2,10 @@
 GraphQL Grammar
 */
 
+{
+  var extend = require('extend')
+}
+
 GraphQL
   = ws value:definitionOrCall* ws { return value; }
 
@@ -17,6 +21,7 @@ paramNameSeparator = ws ":" ws
 value = false
   / true
   / null
+  / queryParam
   / string
   / undefined
 
@@ -52,15 +57,15 @@ object
 
         if (first.name !== undefined) {
           newData = {};
-          result[first.name] = first.value || true;
-          //deepExtend(result, newData);
+          newData[first.name] = first.value || true;
+          extend(true, result, newData);
         }
 
         for (i = 0; i < rest.length; i++) {
           if (rest[i].name !== undefined) {
             newData = {};
-            result[rest[i].name] = rest[i].value || true;
-            //deepExtend(result, newData);
+            newData[rest[i].name] = rest[i].value || true;
+            extend(true, result, newData);
           }
         }
 
@@ -122,6 +127,12 @@ childCall
   = ws "(" params:params ")" members:object {
       return { params: params || {}, fields: members }
     }
+
+// Query Params
+
+queryParam = "<" name:string ">" {
+  return { type: "queryParam", name: name }
+}
 
 definitionOrCall = definition / call
 childDefinitionOrCall = childDefinition / childCall

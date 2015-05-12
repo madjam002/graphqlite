@@ -29,7 +29,7 @@
   "author": "Jamie Greeff <jamiegreeff+git@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "deep-extend": "^0.3.2"
+    "extend": "^2.0.1"
   },
   "devDependencies": {
     "babel-jest": "^4.0.0",

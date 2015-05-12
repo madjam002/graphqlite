@@ -16,7 +16,7 @@ describe('parser', function () {
           day,
           year,
         },
-        friends(first: 50, after: 100) {
+        friends(first: <first>, after: 100) {
           edges {
             node {
               name,
@@ -57,7 +57,7 @@ describe('parser', function () {
         },
         "friends": {
           "params": {
-            "first": 50,
+            "first": { "type": "queryParam", "name": "first" },
             "after": 100
           },
           "fields": {
@@ -109,7 +109,13 @@ describe('parser', function () {
     var output2 = graphqlite.parse(queryString)
     var output3 = graphqlite.parse(queryStringPretty)
 
+    var injectedParams = graphqlite.injectParams(output, {first: 999})
+
     expect(output2).toEqual(expected)
     expect(output3).toEqual(expected)
+
+    expected[0].fields.friends.params.first = 999
+
+    expect(injectedParams).toEqual(expected)
   })
 })
