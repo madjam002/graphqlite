@@ -43,7 +43,7 @@ string "string"
   else return str;
 }
 
-char = [0-9a-zA-Z]
+char = [0-9a-zA-Z/]
 
 // Objects
 
