@@ -6,7 +6,7 @@ describe('parser', function () {
     var output
 
     output = graphqlite.parse(`
-      user(id: abc123) {
+      user(id: abc/123) {
         id,
         name,
         birthdate {
@@ -43,7 +43,7 @@ describe('parser', function () {
     expected = [{
       "type": "user",
       "params": {
-        "id": "abc123"
+        "id": "abc/123"
       },
       "fields": {
         "id": true,
