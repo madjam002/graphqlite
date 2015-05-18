@@ -22,10 +22,12 @@ value = false
   / true
   / null
   / queryParam
+  / number
   / string
+  / name // for backwards compatibility of strings without using quotes
   / undefined
 
-stringOrUndf = string
+nameOrUndf = name
   / undefined
 
 undefined = "" { return undefined; }
@@ -33,17 +35,62 @@ false = "false" { return false; }
 null  = "null"  { return null;  }
 true  = "true"  { return true;  }
 
+// Numbers
+number "number"
+  = minus? int frac? exp? { return parseFloat(text()); }
+
+decimal_point = "."
+digit1_9      = [1-9]
+e             = [eE]
+exp           = e (minus / plus)? DIGIT+
+frac          = decimal_point DIGIT+
+int           = zero / (digit1_9 DIGIT*)
+minus         = "-"
+plus          = "+"
+zero          = "0"
+
 // Strings
 
-string "string"
-  = chars:char+ {
+name "name"
+  = chars:nameChar+ {
   var str = chars.join("");
   var num = parseInt(str);
   if (!isNaN(num) && num.toString() === str) return num;
   else return str;
 }
 
-char = [0-9a-zA-Z/]
+nameChar = [0-9a-zA-Z/_-]
+
+string "string"
+  = quotation_mark chars:char* quotation_mark { return chars.join(""); }
+
+char
+  = unescaped
+  / escape
+    sequence:(
+        '"'
+      / "\\"
+      / "/"
+      / "b" { return "\b"; }
+      / "f" { return "\f"; }
+      / "n" { return "\n"; }
+      / "r" { return "\r"; }
+      / "t" { return "\t"; }
+      / "u" digits:$(HEXDIG HEXDIG HEXDIG HEXDIG) {
+          return String.fromCharCode(parseInt(digits, 16));
+        }
+    )
+    { return sequence; }
+
+escape         = "\\"
+quotation_mark = '"'
+unescaped      = [\x20-\x21\x23-\x5B\x5D-\u10FFFF]
+
+/* ----- Core ABNF Rules ----- */
+
+/* See RFC 4234, Appendix B (http://tools.ietf.org/html/rfc4627). */
+DIGIT  = [0-9]
+HEXDIG = [0-9a-f]i
 
 // Objects
 
@@ -76,17 +123,17 @@ object
     { return members !== null ? members: {}; }
 
 member
-  = name:string ws value:childDefinitionOrCall {
+  = name:name ws value:childDefinitionOrCall {
       return { name: name, value: value };
     }
-  / name:stringOrUndf {
+  / name:nameOrUndf {
       return { name: name };
     }
 
 // Definitions
 
 definition "definition"
-  = type:stringOrUndf
+  = type:nameOrUndf
     members:object {
       return { type: type, fields: members }
     }
@@ -114,12 +161,12 @@ params
     })?
 
 param
-  = name:string paramNameSeparator value:value {
+  = name:name paramNameSeparator value:value {
       return { name: name, value: value };
     }
 
 call
-  = ws type:string ws "(" params:params ")" members:object {
+  = ws type:name ws "(" params:params ")" members:object {
       return { type: type, params: params || {}, fields: members }
     }
 
@@ -130,7 +177,7 @@ childCall
 
 // Query Params
 
-queryParam = "<" name:string ">" {
+queryParam = "<" name:name ">" {
   return { type: "queryParam", name: name }
 }
 

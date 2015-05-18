@@ -6,7 +6,7 @@ describe('parser', function () {
     var output
 
     output = graphqlite.parse(`
-      user(id: abc/123) {
+      user(id: "abc123,_-@'/hi\\"test") {
         id,
         name,
         birthdate {
@@ -30,7 +30,7 @@ describe('parser', function () {
       }
 
       Viewer {
-        something(first: 62) {
+        something(first: 62, minus: -1503423, decimal: 523.3594358, decimalAndMinus: -234234.4656456, string: <hello>) {
           edges {
             node {
               id
@@ -38,12 +38,16 @@ describe('parser', function () {
           }
         }
       }
+
+      test(id: backwardsCompatibility) {
+        name
+      }
     `)
 
     expected = [{
       "type": "user",
       "params": {
-        "id": "abc/123"
+        "id": "abc123,_-@'/hi\"test"
       },
       "fields": {
         "id": true,
@@ -85,7 +89,11 @@ describe('parser', function () {
       "fields": {
         "something": {
           "params": {
-            "first": 62
+            "first": 62,
+            "minus": -1503423,
+            "decimal": 523.3594358,
+            "decimalAndMinus": -234234.4656456,
+            "string": { "type": "queryParam", "name": "hello" }
           },
           "fields": {
             "edges": {
@@ -100,21 +108,31 @@ describe('parser', function () {
           }
         }
       }
+    }, {
+      "type": "test",
+      "params": {
+        "id": "backwardsCompatibility"
+      },
+      "fields": {
+        "name": true
+      }
     }]
 
     expect(output).toEqual(expected)
 
     var queryString = graphqlite.stringify(expected)
     var queryStringPretty = graphqlite.stringify(expected, true)
+
     var output2 = graphqlite.parse(queryString)
     var output3 = graphqlite.parse(queryStringPretty)
 
-    var injectedParams = graphqlite.injectParams(output, {first: 999})
+    var injectedParams = graphqlite.injectParams(output, {first: 999, hello: 'foobar'})
 
     expect(output2).toEqual(expected)
     expect(output3).toEqual(expected)
 
     expected[0].fields.friends.params.first = 999
+    expected[1].fields.something.params.string = 'foobar'
 
     expect(injectedParams).toEqual(expected)
   })
