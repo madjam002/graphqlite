@@ -35,6 +35,10 @@ var output = graphqlite.parse(`
       }
     }
   }
+
+  filter(name: "test string parameter") {
+
+  }
 `)
 
 var backToString = graphqlite.stringify(output)
@@ -75,6 +79,11 @@ In the above example, `output` will be:
         }
       }
     }
+  }
+}, {
+  "type": "filter",
+  "params": {
+    "name": "test string parameter"
   }
 }]
 ```

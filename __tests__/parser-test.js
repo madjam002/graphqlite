@@ -6,7 +6,7 @@ describe('parser', function () {
     var output
 
     output = graphqlite.parse(`
-      user(id: "abc123,_-@'/hi\\"test") {
+      user(id: "abc123,_-@'/hi\\"test with spaces") {
         id,
         name,
         birthdate {
@@ -47,7 +47,7 @@ describe('parser', function () {
     expected = [{
       "type": "user",
       "params": {
-        "id": "abc123,_-@'/hi\"test"
+        "id": "abc123,_-@'/hi\"test with spaces"
       },
       "fields": {
         "id": true,
