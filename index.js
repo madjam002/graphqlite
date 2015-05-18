@@ -1,12 +1,11 @@
-var parser = require('./lib/parser')
-var stringify = require('./lib/stringify')
+var compose = require('./lib/compose')
 
-exports.parse = function (ql) {
-  return parser.parse(ql)
+module.exports = function () {
+  return compose(arguments[0], Array.prototype.slice.call(arguments, 1))
 }
 
-exports.stringify = function (data, pretty) {
-  return stringify(data, pretty)
-}
+module.exports.parse = require('./lib/parser').parse
 
-exports.injectParams = require('./lib/inject-params')
+module.exports.stringify = require('./lib/stringify')
+
+module.exports.injectParams = require('./lib/inject-params')

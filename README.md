@@ -16,9 +16,9 @@ $ npm install graphqlite
 GraphQLite exposes a simple API for parsing GraphQL (example uses ES6 multi-line strings).
 
 ```javascript
-var graphqlite = require('graphqlite')
+var graphql = require('graphqlite')
 
-var output = graphqlite.parse(`
+var output = graphql.parse(`
   node(id: 123) {
     id,
     name,
@@ -41,8 +41,8 @@ var output = graphqlite.parse(`
   }
 `)
 
-var backToString = graphqlite.stringify(output)
-var pretty = graphqlite.stringify(output, true)
+var backToString = graphql.stringify(output)
+var pretty = graphql.stringify(output, true)
 ```
 
 In the above example, `output` will be:
@@ -90,10 +90,47 @@ In the above example, `output` will be:
 
 `stringify` takes the output from `parse` and generates a GraphQL string. If no second parameter is provided, the output will be minified. If the second parameter is `true`, the output will be prettified.
 
+### ES6 Templates
+
+GraphQLite can also be used with ES6 template strings, like follows:
+
+```javascript
+var graphql = require('graphqlite')
+
+var EventQuery = graphql`
+  Event {
+    name,
+    location
+  }
+`
+
+var UserQuery = graphql`
+  User {
+    name,
+    profilePic
+  }
+`
+
+var FinalQuery = graphql`
+  Viewer {
+    endpoint,
+    feed(first: <first>) {
+      id
+    },
+
+    ${EventQuery},
+    ${UserQuery}
+  }
+`
+
+```
+
+This allows queries to be composed. `FinalQuery` in the above example will be a composed GraphQL string.
+
 ## Roadmap
 Facebook will be releasing a GraphQL module in the future, but I didn't know what to expect from this
 so I created this basic one as an experiment.
-Therefore this module could become obselete in the future.
+Therefore this module could become obsolete in the future.
 
 ## License
 
